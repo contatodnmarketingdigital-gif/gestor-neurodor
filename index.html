@@ -85,6 +85,15 @@
   .pill.test { background: rgba(155,89,182,0.18); color: var(--purple); }
   .pill.keep { background: rgba(151,163,196,0.18); color: var(--muted); }
 
+  /* HORIZONTAL BARS (funil de tráfego) */
+  .bars-h { display: grid; grid-template-columns: 90px 1fr 110px; gap: 10px; align-items: center; margin: 6px 0; font-size: 13px; }
+  .bar-track { background: #0e1424; border-radius: 999px; overflow: hidden; height: 18px; position: relative; border: 1px solid var(--line); }
+  .bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--green-dk), var(--green)); }
+  .bar-fill.good { background: linear-gradient(90deg, var(--green-dk), var(--green)); }
+  .bar-fill.warn { background: linear-gradient(90deg, #b78a07, var(--yellow)); }
+  .bar-fill.bad { background: linear-gradient(90deg, var(--red-dk), var(--red)); }
+  .bar-value { color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; font-size: 12px; }
+
   /* FATIGUE CHART */
   .fatigue-grid { display: grid; grid-template-columns: 70px 1fr 70px 70px; gap: 6px; align-items: center; font-size: 12px; }
   .fatigue-grid .day { color: var(--muted); font-variant-numeric: tabular-nums; }
@@ -458,16 +467,4 @@
       </div>
       <div class="action-card test">
         <div class="ac-title">TESTAR Lookalike 25–34 feminino</div>
-        <div class="ac-stat">Criar lookalike 1–3% sobre as 10 compradoras de 25–34 feminino (campeãs com ROAS 1,86×). Verba: R$ 30/dia × 7 dias.</div>
-      </div>
-    </div>
-
-    <div class="insight green">
-      <b>Insight de quem é o cliente:</b> a venda concentra-se em <b>mulheres entre 25–44 anos</b> (45 das 51 vendas = 88%). O perfil de "profissional de saúde início/meio de carreira buscando especialização" é claramente o que mais converte. Esse é o avatar a ser refinado nos novos criativos.
-    </div>
-  </section>
-
-  <!-- ETAPA 5: PLANO DE CRIATIVOS -->
-  <section>
-    <h2><span class="tag">PRIORIDADE 4</span>Plano de criativos novos (4 por semana)</h2>
-    <div class="lead">Próximos 30 dias: 16 criativos novos, 1 ângulo principal por semana. Foco em mulheres 25–44 e i
+     
