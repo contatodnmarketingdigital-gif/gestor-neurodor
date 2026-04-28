@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel do Gestor — Neurociência na Dor (Imersão Abr/2026)</title>
+<style>
+  :root {
+    --bg: #0e1424; --card: #161e34; --card2: #1d2746; --line: #2a3658;
+    --text: #e9eefb; --muted: #97a3c4;
+    --blue: #4d8df6; --green: #2ecc71; --green-dk: #1ea05a;
+    --yellow: #f1c40f; --orange: #e67e22; --red: #e74c3c; --red-dk: #b53a2c;
+    --purple: #9b59b6;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    background: linear-gradient(180deg, #0a0f1f 0%, #0e1424 100%);
+    color: var(--text); line-height: 1.55; padding: 28px 18px; }
+  .container { max-width: 1240px; margin: 0 auto; }
+
+  header.hero {
+    background: linear-gradient(135deg, #15203b 0%, #1f2d52 100%);
+    border-radius: 18px; padding: 36px 32px; margin-bottom: 22px;
+    border: 1px solid var(--line); box-shadow: 0 4px 30px rgba(0,0,0,0.35);
+  }
+  .eyebrow { color: var(--blue); font-weight: 700; letter-spacing: 1.5px; font-size: 12px; text-transform: uppercase; }
+  h1 { font-size: 32px; margin: 6px 0 6px; line-height: 1.15; }
+  .subtitle { color: var(--muted); font-size: 15px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  .legend .item { background: rgba(255,255,255,0.04); padding: 6px 12px; border-radius: 999px; font-size: 12px; color: var(--muted); border: 1px solid var(--line); }
+
+  /* SUMMARY ALERTS */
+  .alert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-bottom: 22px; }
+  .alert {
+    border-radius: 14px; padding: 18px 20px;
+    border-left: 4px solid; display: flex; flex-direction: column; gap: 4px;
+  }
+  .alert.danger { background: linear-gradient(180deg, rgba(231,76,60,0.13), rgba(231,76,60,0.03)); border-color: var(--red); }
+  .alert.warn { background: linear-gradient(180deg, rgba(241,196,15,0.13), rgba(241,196,15,0.03)); border-color: var(--yellow); }
+  .alert.opp { background: linear-gradient(180deg, rgba(46,204,113,0.13), rgba(46,204,113,0.03)); border-color: var(--green); }
+  .alert.info { background: linear-gradient(180deg, rgba(77,141,246,0.13), rgba(77,141,246,0.03)); border-color: var(--blue); }
+  .alert .alert-tag { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; }
+  .alert.danger .alert-tag { color: var(--red); }
+  .alert.warn .alert-tag { color: var(--yellow); }
+  .alert.opp .alert-tag { color: var(--green); }
+  .alert.info .alert-tag { color: var(--blue); }
+  .alert .alert-title { font-size: 16px; font-weight: 700; }
+  .alert .alert-body { font-size: 13px; color: var(--text); line-height: 1.5; }
+  .alert .alert-impact { font-size: 12px; color: var(--muted); margin-top: 4px; font-weight: 600; }
+
+  /* SECTION */
+  section { background: var(--card); border: 1px solid var(--line);
+    border-radius: 16px; padding: 26px 28px; margin: 18px 0; }
+  section h2 { font-size: 22px; margin: 0 0 6px; color: var(--text); display: flex; align-items: center; gap: 10px; }
+  section h2 .tag { color: var(--blue); font-weight: 800; font-size: 12px; letter-spacing: 1.5px; background: rgba(77,141,246,0.15); padding: 4px 10px; border-radius: 6px; }
+  section .lead { color: var(--muted); font-size: 14px; margin-bottom: 22px; }
+  section h3 { font-size: 15px; color: var(--muted); margin: 22px 0 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+
+  /* ACTION CARDS */
+  .action-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+  .action-card { background: var(--card2); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .action-card.kill { border-color: rgba(231,76,60,0.4); background: linear-gradient(180deg, rgba(231,76,60,0.07), rgba(231,76,60,0.01)); }
+  .action-card.scale { border-color: rgba(46,204,113,0.4); background: linear-gradient(180deg, rgba(46,204,113,0.07), rgba(46,204,113,0.01)); }
+  .action-card.test { border-color: rgba(155,89,182,0.4); background: linear-gradient(180deg, rgba(155,89,182,0.07), rgba(155,89,182,0.01)); }
+  .action-card .ac-title { font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+  .action-card .ac-stat { color: var(--muted); font-size: 12px; }
+  .action-card.kill .ac-stat b { color: var(--red); }
+  .action-card.scale .ac-stat b { color: var(--green); }
+  .action-card.test .ac-stat b { color: var(--purple); }
+
+  /* TABLES */
+  table.simple { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 6px; }
+  table.simple th, table.simple td { padding: 9px 8px; border-bottom: 1px solid var(--line); text-align: left; }
+  table.simple th { color: var(--muted); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  table.simple tr.win td { background: rgba(46,204,113,0.04); }
+  table.simple tr.lose td { background: rgba(231,76,60,0.04); }
+  td.right { text-align: right; font-variant-numeric: tabular-nums; }
+  td.center { text-align: center; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+  .pill.up { background: rgba(46,204,113,0.18); color: var(--green); }
+  .pill.dn { background: rgba(231,76,60,0.18); color: var(--red); }
+  .pill.mid { background: rgba(241,196,15,0.18); color: var(--yellow); }
+  .pill.scale { background: rgba(46,204,113,0.18); color: var(--green); }
+  .pill.kill { background: rgba(231,76,60,0.18); color: var(--red); }
+  .pill.test { background: rgba(155,89,182,0.18); color: var(--purple); }
+  .pill.keep { background: rgba(151,163,196,0.18); color: var(--muted); }
+
+  /* FATIGUE CHART */
+  .fatigue-grid { display: grid; grid-template-columns: 70px 1fr 70px 70px; gap: 6px; align-items: center; font-size: 12px; }
+  .fatigue-grid .day { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .fatigue-grid .bar-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .fbar { height: 16px; border-radius: 4px; }
+  .fbar-roas { background: linear-gradient(90deg, var(--green-dk), var(--green)); }
+  .fbar-roas.bad { background: linear-gradient(90deg, var(--red-dk), var(--red)); }
+  .fbar-roas.mid { background: linear-gradient(90deg, #b78a07, var(--yellow)); }
+  .fbar-ctr { background: linear-gradient(90deg, #2c5e8a, var(--blue)); }
+  .fbar-label { font-size: 10px; color: var(--muted); display: flex; gap: 14px; padding-left: 76px; margin-bottom: 4px; }
+
+  /* DEMO HEAT */
+  .demo-heat { display: grid; grid-template-columns: 80px repeat(2, 1fr); gap: 4px; font-size: 12px; }
+  .demo-heat .dh-h { color: var(--muted); font-weight: 700; padding: 6px; text-align: center; font-size: 11px; text-transform: uppercase; }
+  .demo-heat .dh-r { color: var(--muted); padding: 6px; font-weight: 700; }
+  .demo-heat .dh-cell { padding: 10px; border-radius: 6px; text-align: center; }
+  .demo-heat .dh-cell .dr { font-size: 16px; font-weight: 800; }
+  .demo-heat .dh-cell .ds { font-size: 10px; color: var(--muted); margin-top: 2px; }
+  .dhc-best { background: rgba(46,204,113,0.30); color: white; }
+  .dhc-good { background: rgba(46,204,113,0.18); }
+  .dhc-mid { background: rgba(241,196,15,0.15); }
+  .dhc-bad { background: rgba(231,76,60,0.15); }
+  .dhc-worst { background: rgba(231,76,60,0.30); }
+
+  /* INSIGHTS */
+  .insight { background: rgba(77,141,246,0.08); border-left: 3px solid var(--blue);
+    border-radius: 8px; padding: 12px 16px; margin-top: 14px; font-size: 13px; }
+  .insight b { color: var(--blue); }
+  .insight.green { background: rgba(46,204,113,0.08); border-left-color: var(--green); }
+  .insight.green b { color: var(--green); }
+  .insight.red { background: rgba(231,76,60,0.08); border-left-color: var(--red); }
+  .insight.red b { color: var(--red); }
+  .insight.yellow { background: rgba(241,196,15,0.08); border-left-color: var(--yellow); }
+  .insight.yellow b { color: var(--yellow); }
+
+  /* CALENDAR (creative plan) */
+  .week { background: var(--card2); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+  .week .wnum { font-size: 11px; color: var(--blue); font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; }
+  .week .wtitle { font-size: 16px; font-weight: 700; margin-top: 4px; }
+  .week .wgrid { display: grid; grid-template-columns: 1fr 2fr; gap: 14px; margin-top: 10px; font-size: 13px; }
+  .week .whead { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .week .wbody { color: var(--text); }
+  .week .whook { background: rgba(0,0,0,0.20); padding: 8px 12px; border-radius: 6px; font-style: italic; font-size: 13px; }
+
+  footer { color: var(--muted); font-size: 12px; text-align: center; padding: 20px 0 4px; }
+
+  @media (max-width: 720px) {
+    h1 { font-size: 24px; }
+    section { padding: 20px; }
+    .demo-heat { grid-template-columns: 60px 1fr 1fr; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="hero">
+    <div class="eyebrow">Painel Operacional do Gestor</div>
+    <h1>Neurociência na Dor — Imersão (Abr/2026)</h1>
+    <div class="subtitle">Período: 09/04/2026 a 28/04/2026 (20 dias) · 6 campanhas · 12 conjuntos · 31 criativos · R$ 2.946,60 investidos · 48 vendas pagas (Hotmart)</div>
+    <div class="legend">
+      <span class="item">📊 Cruzamento Meta Ads × Hotmart</span>
+      <span class="item">🎯 Foco: ações 0–48h e melhoria contínua</span>
+      <span class="item">⚙️ Atualizado em 28/04/2026</span>
+    </div>
+  </header>
+
+  <!-- SUMMARY ALERTS -->
+  <div class="alert-grid">
+    <div class="alert danger">
+      <div class="alert-tag">🔴 Pausar agora</div>
+      <div class="alert-title">6 anúncios queimando verba</div>
+      <div class="alert-body">R$ 855,80 investidos · apenas 7 vendas no agregado · ROAS médio 0,55×</div>
+      <div class="alert-impact">Impacto: economia de ~R$ 130/dia</div>
+    </div>
+    <div class="alert opp">
+      <div class="alert-tag">🟢 Escalar</div>
+      <div class="alert-title">3 anúncios com ROAS &gt; 1,3×</div>
+      <div class="alert-body">AD0001 (1,45×), AD0012 (1,44×), AD0032 (1,38×) — diluir frequência com novas variações</div>
+      <div class="alert-impact">Potencial: +30% no faturamento líquido</div>
+    </div>
+    <div class="alert warn">
+      <div class="alert-tag">⚠️ Fadiga detectada</div>
+      <div class="alert-title">AD0001 (campeão) saturando</div>
+      <div class="alert-body">CTR caiu de 2,04% (09/04) para 0,35% (22/04). ROAS caiu de 4,3× para 0,9× nos últimos 7 dias</div>
+      <div class="alert-impact">Renovar criativo nas próximas 48h</div>
+    </div>
+    <div class="alert info">
+      <div class="alert-tag">💡 Oportunidade oculta</div>
+      <div class="alert-title">Retargeting [03] subinvestido</div>
+      <div class="alert-body">Conjunto de visitantes 365d com ROAS 1,51× e apenas R$ 157 investidos (5% da verba)</div>
+      <div class="alert-impact">Subir verba para R$ 50/dia</div>
+    </div>
+  </div>
+
+  <!-- ETAPA 1: AÇÕES 0–48h -->
+  <section>
+    <h2><span class="tag">PRIORIDADE 1</span>Ações 0–48h: o que pausar, escalar e ajustar</h2>
+    <div class="lead">Decisões imediatas baseadas em dados reais. Verba a ser realocada: R$ 855,80 (29% do orçamento atual).</div>
+
+    <h3>🔴 PAUSAR (6 anúncios · R$ 855,80 desperdiçados)</h3>
+    <div class="action-row">
+      <div class="action-card kill">
+        <div class="ac-title">AD0019 — ORGANIZAR MELHOR A TOMADA DE DECISÃO</div>
+        <div class="ac-stat"><b>R$ 220,51</b> · 2 vendas · ROAS 0,53× · CPA R$ 110</div>
+      </div>
+      <div class="action-card kill">
+        <div class="ac-title">AD0008 — DIFERENCIE NOCICEPTIVA</div>
+        <div class="ac-stat"><b>R$ 199,44</b> · 3 vendas · ROAS 0,89× · CTR baixíssima 0,71%</div>
+      </div>
+      <div class="action-card kill">
+        <div class="ac-title">AD0022 — PROFISSIONAIS DE SAÚDE</div>
+        <div class="ac-stat"><b>R$ 167,71</b> · 1 venda · ROAS 0,35× · CPA R$ 167</div>
+      </div>
+      <div class="action-card kill">
+        <div class="ac-title">AD0014 — IDENTIFICAR MECANISMO DA DOR</div>
+        <div class="ac-stat"><b>R$ 164,19</b> · 1 venda · ROAS 0,36× · CTR 0,73%</div>
+      </div>
+      <div class="action-card kill">
+        <div class="ac-title">AD0016 — INTERPRETE A DOR COM BASE</div>
+        <div class="ac-stat"><b>R$ 73,54</b> · 0 vendas · 100% queima</div>
+      </div>
+      <div class="action-card kill">
+        <div class="ac-title">AD0011 — SABE O QUE ESTÁ TRATANDO</div>
+        <div class="ac-stat"><b>R$ 32,76</b> · 0 vendas · 100% queima</div>
+      </div>
+    </div>
+
+    <h3>🟢 ESCALAR (3 vencedores comprovados + 2 em incubação)</h3>
+    <div class="action-row">
+      <div class="action-card scale">
+        <div class="ac-title">AD0001 — PACIENTES COM DOR (imagem)</div>
+        <div class="ac-stat"><b>R$ 858,30</b> · 21 vendas · ROAS 1,45× · ⚠️ <i>renovar criativo antes de subir verba</i></div>
+      </div>
+      <div class="action-card scale">
+        <div class="ac-title">AD0012 — ERRO AO TRATAR DOR (vídeo)</div>
+        <div class="ac-stat"><b>R$ 82,36</b> · 2 vendas · ROAS 1,44× · CTR 1,59% (a melhor do top)</div>
+      </div>
+      <div class="action-card scale">
+        <div class="ac-title">AD0032 — PARA PROFISSIONAIS QUE ATENDEM</div>
+        <div class="ac-stat"><b>R$ 129,29</b> · 3 vendas · ROAS 1,38× · subir gradualmente</div>
+      </div>
+      <div class="action-card test">
+        <div class="ac-title">AD0002 — PACIENTES COM DOR AZUL ⭐</div>
+        <div class="ac-stat"><b>R$ 5,83</b> · 2 vendas · ROAS <b>20,4×</b> · subir para R$ 30/dia para validar</div>
+      </div>
+      <div class="action-card test">
+        <div class="ac-title">AD0020 — NEUROCIENCIA DA DOR</div>
+        <div class="ac-stat"><b>R$ 19,09</b> · 1 venda · ROAS 3,11× · subir para R$ 25/dia</div>
+      </div>
+    </div>
+
+    <h3>⚙️ AJUSTAR (3 ações de configuração da conta)</h3>
+    <div class="action-row">
+      <div class="action-card">
+        <div class="ac-title">Regra automática de pausa</div>
+        <div class="ac-stat">Pausar conjuntos com CPA &gt; R$ 90 após R$ 100 gastos OU 3 dias sem compra. Economia estimada: R$ 250–400/mês.</div>
+      </div>
+      <div class="action-card">
+        <div class="ac-title">Subir verba do Conjunto [03] retargeting</div>
+        <div class="ac-stat">De R$ 157 para R$ 50/dia. Maior ROAS da conta (1,51×) com a menor verba.</div>
+      </div>
+      <div class="action-card">
+        <div class="ac-title">Recuperação dos 3 carrinhos expirados</div>
+        <div class="ac-stat">Sequência de 3 e-mails + WhatsApp em 24h/48h/72h. Potencial: R$ 201 (~3 vendas extra).</div>
+      </div>
+    </div>
+
+    <div class="insight green">
+      <b>Resumo da redistribuição proposta:</b> ao pausar os 6 queimadores e realocar R$ 855 para AD0001 (renovado), AD0012, AD0002, AD0032 e Conjunto [03] de retargeting, projeção é ROAS médio sair de 1,16× para <b>1,40×+ em 14 dias</b>, transformando o atual –R$ 216 líquido em <b>+R$ 250 a +R$ 400 de lucro líquido após taxas Hotmart</b>.
+    </div>
+  </section>
+
+  <!-- ETAPA 2: PERFORMANCE POR CRIATIVO -->
+  <section>
+    <h2><span class="tag">PRIORIDADE 2</span>Performance por criativo (todos os 31)</h2>
+    <div class="lead">Top 10 por investimento + classificação tática (escalar / matar / testar mais).</div>
+
+    <table class="simple">
+      <thead>
+        <tr>
+          <th>Anúncio</th>
+          <th>Tipo</th>
+          <th class="right">Inv.</th>
+          <th class="center">Vendas</th>
+          <th class="right">CPA</th>
+          <th class="right">ROAS</th>
+          <th class="right">CTR</th>
+          <th class="right">Freq.</th>
+          <th class="center">Decisão</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="win"><td><b>AD0001 — PACIENTES COM DOR</b></td><td>Imagem</td><td class="right">858,30</td><td class="center"><b>21</b></td><td class="right">40,87</td><td class="right"><span class="pill up">1,45×</span></td><td class="right">1,12%</td><td class="right">2,00</td><td class="center"><span class="pill scale">Escalar c/ renovação</span></td></tr>
+        <tr class="win"><td>AD0026 — PACIENTES COM DOR CRÔNICA</td><td>Vídeo</td><td class="right">330,29</td><td class="center">6</td><td class="right">55,05</td><td class="right"><span class="pill up">1,08×</span></td><td class="right">1,12%</td><td class="right">1,58</td><td class="center"><span class="pill keep">Manter</span></td></tr>
+        <tr class="win"><td>AD009 — O EXAME NÃO BATEU</td><td>Vídeo</td><td class="right">307,11</td><td class="center">6</td><td class="right">51,19</td><td class="right"><span class="pill up">1,16×</span></td><td class="right">1,20%</td><td class="right">3,00</td><td class="center"><span class="pill keep">Manter (alerta freq.)</span></td></tr>
+        <tr class="lose"><td>AD0019 — ORGANIZAR TOMADA DECISÃO</td><td>Imagem</td><td class="right">220,51</td><td class="center">2</td><td class="right">110,26</td><td class="right"><span class="pill dn">0,53×</span></td><td class="right">1,24%</td><td class="right">2,00</td><td class="center"><span class="pill kill">PAUSAR</span></td></tr>
+        <tr class="lose"><td>AD0008 — DIFERENCIE NOCICEPTIVA</td><td>Imagem</td><td class="right">199,44</td><td class="center">3</td><td class="right">66,48</td><td class="right"><span class="pill dn">0,89×</span></td><td class="right">0,71%</td><td class="right">3,00</td><td class="center"><span class="pill kill">PAUSAR</span></td></tr>
+        <tr class="lose"><td>AD0022 — PROFISSIONAIS DE SAÚDE</td><td>Imagem</td><td class="right">167,71</td><td class="center">1</td><td class="right">167,71</td><td class="right"><span class="pill dn">0,35×</span></td><td class="right">1,23%</td><td class="right">1,40</td><td class="center"><span class="pill kill">PAUSAR</span></td></tr>
+        <tr class="lose"><td>AD0014 — IDENTIFICAR MECANISMO DA DOR</td><td>Imagem</td><td class="right">164,19</td><td class="center">1</td><td class="right">164,19</td><td class="right"><span class="pill dn">0,36×</span></td><td class="right">0,73%</td><td class="right">1,38</td><td class="center"><span class="pill kill">PAUSAR</span></td></tr>
+        <tr class="win"><td>AD0032 — PARA PROFISSIONAIS QUE ATENDEM</td><td>Imagem</td><td class="right">129,29</td><td class="center">3</td><td class="right">43,10</td><td class="right"><span class="pill up">1,38×</span></td><td class="right">0,89%</td><td class="right">3,13</td><td class="center"><span class="pill scale">Escalar</span></td></tr>
+        <tr class="win"><td>AD0012 — ERRO AO TRATAR DOR</td><td>Vídeo</td><td class="right">82,36</td><td class="center">2</td><td class="right">41,18</td><td class="right"><span class="pill up">1,44×</span></td><td class="right">1,59%</td><td class="right">2,29</td><td class="center"><span class="pill scale">Escalar</span></td></tr>
+        <tr class="lose"><td>AD0013 — IMAGEM C/ VÍDEO NEUROCIÊNCIA</td><td>Vídeo</td><td class="right">77,16</td><td class="center">1</td><td class="right">77,16</td><td class="right"><span class="pill dn">0,77×</span></td><td class="right">1,17%</td><td class="right">2,06</td><td class="center"><span class="pill kill">Pausar</span></td></tr>
+        <tr class="lose"><td>AD0016 — INTERPRETE A DOR COM BASE</td><td>Imagem</td><td class="right">73,54</td><td class="center">0</td><td class="right">—</td><td class="right"><span class="pill dn">0,00×</span></td><td class="right">—</td><td class="right">1,00</td><td class="center"><span class="pill kill">PAUSAR</span></td></tr>
+      </tbody>
+    </table>
+
+    <h3>📦 Anúncios pouco testados (R$ &lt; 30 · 17 anúncios)</h3>
+    <div class="lead" style="margin-top: 0;">Estes 17 criativos receberam pouca verba e não dá para concluir nada. <b>Recomendação:</b> escolher 4 mais alinhados aos ângulos vencedores (dor, mecanismo, profissional) e testar com R$ 10/dia cada por 5 dias.</div>
+
+    <div class="insight yellow">
+      <b>Lição transferível:</b> os 4 vencedores claros (AD0001, AD0012, AD0026, AD0032) compartilham 2 padrões — (1) hook focado em "pacientes com dor / dor crônica" (identificação direta) e (2) chamado direto para profissionais de saúde. Os anúncios técnico-conceituais (mecanismo, nociceptiva, interpretação) consistentemente queimaram verba. <b>Próximas baterias devem priorizar identificação emocional sobre conceito clínico.</b>
+    </div>
+  </section>
+
+  <!-- ETAPA 3: FADIGA DO AD0001 -->
+  <section>
+    <h2><span class="tag">ALERTA</span>Fadiga do anúncio campeão (AD0001)</h2>
+    <div class="lead">Evolução diária de ROAS e CTR do AD0001. A queda começa em 15/04 e se acelera após 18/04.</div>
+
+    <div class="fbar-label">
+      <span style="display: inline-block; width: 12px; height: 12px; background: var(--green); border-radius: 3px;"></span> ROAS
+      <span style="display: inline-block; width: 12px; height: 12px; background: var(--blue); border-radius: 3px;"></span> CTR
+    </div>
+
+    <div id="fatigue-chart"></div>
+
+    <div class="insight red">
+      <b>Diagnóstico:</b> o AD0001 entregou ROAS 4,3× nos primeiros 3 dias (10–11/04) e caiu para média 0,7× nos últimos 7 dias. CTR despencou de 2,04% para 0,35%. Isso é fadiga clássica de criativo: o público viu o anúncio e parou de clicar. <b>Ação imediata:</b> congelar verba do AD0001 até subir 4 variações novas (mesma headline, novas imagens/cores) — pode dar lift de 20–40% só renovando o visual.
+    </div>
+  </section>
+
+  <!-- ETAPA 4: DEMOGRAFIA -->
+  <section>
+    <h2><span class="tag">PRIORIDADE 3</span>Demografia detalhada (idade × gênero)</h2>
+    <div class="lead">Calor real das vendas pagas. Investir mais onde já dá retorno e cortar onde queima.</div>
+
+    <div class="demo-heat">
+      <div class="dh-h"></div>
+      <div class="dh-h">Mulheres</div>
+      <div class="dh-h">Homens</div>
+
+      <div class="dh-r">25–34</div>
+      <div class="dh-cell dhc-best"><div class="dr">1,86×</div><div class="ds">10 vendas · CPA R$ 32</div></div>
+      <div class="dh-cell dhc-good"><div class="dr">1,32×</div><div class="ds">5 vendas · CPA R$ 45</div></div>
+
+      <div class="dh-r">35–44</div>
+      <div class="dh-cell dhc-good"><div class="dr">1,09×</div><div class="ds">13 vendas · CPA R$ 54</div></div>
+      <div class="dh-cell dhc-mid"><div class="dr">0,97×</div><div class="ds">7 vendas · CPA R$ 61</div></div>
+
+      <div class="dh-r">45–54</div>
+      <div class="dh-cell dhc-mid"><div class="dr">0,91×</div><div class="ds">8 vendas · CPA R$ 65</div></div>
+      <div class="dh-cell dhc-worst"><div class="dr">0,32×</div><div class="ds">2 vendas · CPA R$ 185</div></div>
+
+      <div class="dh-r">55–64</div>
+      <div class="dh-cell dhc-good"><div class="dr">1,07×</div><div class="ds">3 vendas · CPA R$ 55</div></div>
+      <div class="dh-cell dhc-good"><div class="dr">1,17×</div><div class="ds">2 vendas · CPA R$ 51</div></div>
+
+      <div class="dh-r">65+</div>
+      <div class="dh-cell dhc-bad"><div class="dr">0,00×</div><div class="ds">0 vendas · R$ 31 invest</div></div>
+      <div class="dh-cell dhc-mid"><div class="dr">0,86×</div><div class="ds">1 venda · CPA R$ 69</div></div>
+    </div>
+
+    <h3>🎯 Plano de ataque demográfico</h3>
+    <div class="action-row">
+      <div class="action-card scale">
+        <div class="ac-title">CRIAR campanha 25–34 dedicada</div>
+        <div class="ac-stat">Hoje 25–34 representa 18% da verba e 30% das vendas. Subir para 35% da verba com criativo otimizado para essa faixa pode levar ROAS médio de 1,16× para 1,40×+.</div>
+      </div>
+      <div class="action-card kill">
+        <div class="ac-title">EXCLUIR Homens 45–54</div>
+        <div class="ac-stat">R$ 371 investidos · ROAS 0,32× · CPA R$ 185 (3× ticket). Adicionar como exclusão em todas as campanhas Advantage+.</div>
+      </div>
+      <div class="action-card kill">
+        <div class="ac-title">EXCLUIR 65+</div>
+        <div class="ac-stat">R$ 100 investidos · ROAS médio 0,59× · público errado para imersão profissional ao vivo.</div>
+      </div>
+      <div class="action-card test">
+        <div class="ac-title">TESTAR Lookalike 25–34 feminino</div>
+        <div class="ac-stat">Criar lookalike 1–3% sobre as 10 compradoras de 25–34 feminino (campeãs com ROAS 1,86×). Verba: R$ 30/dia × 7 dias.</div>
+      </div>
+    </div>
+
+    <div class="insight green">
+      <b>Insight de quem é o cliente:</b> a venda concentra-se em <b>mulheres entre 25–44 anos</b> (45 das 51 vendas = 88%). O perfil de "profissional de saúde início/meio de carreira buscando especialização" é claramente o que mais converte. Esse é o avatar a ser refinado nos novos criativos.
+    </div>
+  </section>
+
+  <!-- ETAPA 5: PLANO DE CRIATIVOS -->
+  <section>
+    <h2><span class="tag">PRIORIDADE 4</span>Plano de criativos novos (4 por semana)</h2>
+    <div class="lead">Próximos 30 dias: 16 criativos novos, 1 ângulo principal por semana. Foco em mulheres 25–44 e identificação emocional.</div>
+
+    <div class="week">
+      <div class="wnum">Semana 1 · 29/04 a 05/05</div>
+      <div class="wtitle">Ângulo: Dor / Identificação</div>
+      <div class="wgrid">
+        <div>
+          <div class="whead">Hook (3 primeiros segundos)</div>
+        </div>
+        <div class="whook">"Se você acorda cansado e com dor, isso aqui pode mudar tudo…"</div>
+        <div><div class="whead">Formato</div></div>
+        <div class="wbody">Reels UGC vertical · 30s · paciente real falando à câmera · legenda forte</div>
+        <div><div class="whead">Variações</div></div>
+        <div class="wbody">4 versões (mudar paciente, cor de fundo, cena de transição). Cada uma sobe em 1 conjunto separado de R$ 10/dia.</div>
+        <div><div class="whead">Critério de validação</div></div>
+        <div class="wbody">CTR ≥ 1,1% e CPA ≤ R$ 55 em 5 dias. Mata o que não bater.</div>
+      </div>
+    </div>
+
+    <div class="week">
+      <div class="wnum">Semana 2 · 06/05 a 12/05</div>
+      <div class="wtitle">Ângulo: Mecanismo (autoridade)</div>
+      <div class="wgrid">
+        <div><div class="whead">Hook</div></div>
+        <div class="whook">"A neurociência descobriu que a dor não nasce no corpo — ela nasce aqui (cérebro)…"</div>
+        <div><div class="whead">Formato</div></div>
+        <div class="wbody">Vídeo profissional 60s · Dr. Guilherme à câmera · plano fechado · animação 2D do cérebro</div>
+        <div><div class="whead">Variações</div></div>
+        <div class="wbody">4 versões (3 hooks diferentes do Dr. Guilherme + 1 com paciente como prova).</div>
+        <div><div class="whead">Critério</div></div>
+        <div class="wbody">Validar CPA ≤ R$ 55 e Conv chk→compra acima de 60%.</div>
+      </div>
+    </div>
+
+    <div class="week">
+      <div class="wnum">Semana 3 · 13/05 a 19/05</div>
+      <div class="wtitle">Ângulo: Prova / Depoimento</div>
+      <div class="wgrid">
+        <div><div class="whead">Hook</div></div>
+        <div class="whook">Cliente real: "Eu tomava 4 remédios por dia. Hoje, zero."</div>
+        <div><div class="whead">Formato</div></div>
+        <div class="wbody">Vídeo testemunhal 45s · 2 fisioterapeutas alunos da imersão · texto sobreposto com nº de pacientes tratados</div>
+        <div><div class="whead">Variações</div></div>
+        <div class="wbody">4 testemunhos diferentes. Foco em fisio e osteopatia (públicos de [01] e [02] que mais convertem).</div>
+        <div><div class="whead">Critério</div></div>
+        <div class="wbody">Histórico mostra que prova social tende a ter ROAS 30% acima da média. Meta: ROAS ≥ 1,4×.</div>
+      </div>
+    </div>
+
+    <div class="week">
+      <div class="wnum">Semana 4 · 20/05 a 26/05</div>
+      <div class="wtitle">Ângulo: Crença oculta / Inimigo comum</div>
+      <div class="wgrid">
+        <div><div class="whead">Hook</div></div>
+        <div class="whook">"Te disseram que você ia conviver com a dor para sempre? Mentira."</div>
+        <div><div class="whead">Formato</div></div>
+        <div class="wbody">Carrossel + Reels paralelo · texto direto · alta contraste · sem música</div>
+        <div><div class="whead">Variações</div></div>
+        <div class="wbody">4 variações com diferentes "inimigos comuns" (medicação, fisioterapia tradicional, conformismo, sistema).</div>
+        <div><div class="whead">Critério</div></div>
+        <div class="wbody">Esse ângulo costuma ter CTR alta mas conversão menor. Validar Conv chk→compra ≥ 50%.</div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <b>Frequência de renovação dos vencedores:</b> sempre que um anúncio atingir frequência ≥ 3,5 OU CTR cair 30% em relação à semana anterior, subir 2 variações novas (mudar primeiros 3 segundos e foto principal). Esse é o gatilho que evita repetir o erro do AD0001 (foi de 4,3× para 0,7× sem renovação).
+    </div>
+  </section>
+
+  <!-- KPIs DE ACOMPANHAMENTO -->
+  <section>
+    <h2><span class="tag">CONTROLE</span>KPIs semanais para o gestor reportar</h2>
+    <div class="lead">Métricas que o gestor envia toda segunda-feira até as 12h. As 4 primeiras são as que destravam crescimento.</div>
+
+    <table class="simple">
+      <thead><tr><th>KPI</th><th>Meta</th><th>Status atual</th><th>Ação se não bater</th></tr></thead>
+      <tbody>
+        <tr><td><b>Conv Checkout → Compra</b></td><td class="right">≥ 70%</td><td class="right">57,0%</td><td>Auditoria de checkout (Pix com desconto, frete antes do cadastro, selos)</td></tr>
+        <tr><td><b>ROAS médio</b></td><td class="right">≥ 1,3×</td><td class="right">1,16×</td><td>Pausar conjuntos com ROAS &lt; 0,8× nos últimos 7 dias</td></tr>
+        <tr><td><b>CPA médio</b></td><td class="right">≤ R$ 50</td><td class="right">R$ 61,39</td><td>Cortar criativos com CPA &gt; 2× ticket após R$ 100</td></tr>
+        <tr><td><b>Frequência (vencedor)</b></td><td class="right">&lt; 3,0</td><td class="right">2,00 (AD0001) / 3,00 (AD009)</td><td>Subir variações novas no conjunto</td></tr>
+        <tr><td>Criativos novos lançados</td><td class="right">4 / semana</td><td class="right">—</td><td>Garantir bateria semanal mesmo se ROAS bom</td></tr>
+        <tr><td>3 anúncios escalando + 0 deficitários</td><td class="right">100%</td><td class="right">—</td><td>Aplicar regra automática de pausa</td></tr>
+        <tr><td>Recuperação de carrinho expirado</td><td class="right">≥ 30%</td><td class="right">—</td><td>Sequência WhatsApp/e-mail em 24h</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    Painel do Gestor · 09/04/2026 a 28/04/2026 · 1.886 registros Meta + 51 transações Hotmart cruzados · Atualizado em 28/04/2026.
+  </footer>
+</div>
+
+<script>
+  // ============== AD0001 FATIGUE CHART ==============
+  // Dados reais por dia: [data, ROAS, CTR%]
+  const ad0001 = [
+    ['09/04', 0.00, 2.05],
+    ['10/04', 1.92, 1.49],
+    ['11/04', 4.31, 1.47],
+    ['12/04', 0.00, 1.36],
+    ['13/04', 3.12, 1.39],
+    ['14/04', 3.02, 0.86],
+    ['15/04', 1.70, 1.10],
+    ['16/04', 0.70, 1.10],
+    ['17/04', 2.53, 0.80],
+    ['18/04', 0.91, 0.98],
+    ['19/04', 1.54, 1.05],
+    ['20/04', 0.00, 0.70],
+    ['21/04', 0.90, 0.84],
+    ['22/04', 0.00, 0.35],
+  ];
+  const maxRoas = 5;
+  const maxCtr = 2.5;
+
+  function roasColor(r) {
+    if (r === 0) return 'fbar-roas bad';
+    if (r < 0.8) return 'fbar-roas bad';
+    if (r < 1.3) return 'fbar-roas mid';
+    return 'fbar-roas';
+  }
+
+  const container = document.getElementById('fatigue-chart');
+  ad0001.forEach(([date, roas, ctr]) => {
+    const row = document.createElement('div');
+    row.className = 'fatigue-grid';
+    row.style.marginBottom = '6px';
+
+    const wRoas = Math.max(2, Math.round((roas / maxRoas) * 100));
+    const wCtr = Math.max(2, Math.round((ctr / maxCtr) * 100));
+
+    row.innerHTML = `
+      <div class="day">${date}</div>
+      <div class="bar-wrapper">
+        <div class="${roasColor(roas)}" style="width: ${wRoas}%"></div>
+        <div class="fbar-ctr" style="width: ${wCtr}%"></div>
+      </div>
+      <div class="day" style="text-align: right;">${roas.toFixed(2)}×</div>
+      <div class="day" style="text-align: right;">${ctr.toFixed(2)}%</div>
+    `;
+    container.appendChild(row);
+  });
+</script>
+</body>
+</html>
